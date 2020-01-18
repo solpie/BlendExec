@@ -2,14 +2,15 @@
   <div>
     <el-menu
       :default-active="activeIndex2"
-      class="el-menu-demo"
       mode="horizontal"
       @select="handleSelect"
+      @open="on_click_hwnd"
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b"
     >
       <el-menu-item index="1">BlendExec</el-menu-item>
+      <!-- <el-menu-item index="2"> -->
       <el-submenu index="2">
         <template slot="title">Hwnd</template>
         <el-menu-item
@@ -19,7 +20,8 @@
           >{{ item.title }}</el-menu-item
         >
       </el-submenu>
-      <el-menu-item index="3" disabled>setting</el-menu-item>
+      <!-- </el-menu-item> -->
+      <el-menu-item index="3">setting</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -53,6 +55,10 @@ export default {
     on_sel_hwnd(item) {
       api.hwnd = item.hwnd;
       console.log("on_sel_hwnd", item.title, item.hwnd);
+    },
+    on_click_hwnd() {
+      console.log("on_click_hwnd");
+      this.init_nav();
     },
     handleSelect(key, keyPath) {
       console.log(key, keyPath);

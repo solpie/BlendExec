@@ -5,7 +5,7 @@ import bpy
 bl_info = {
     "name": "BlendExec",
     "author": "SolPie",
-    "version": (1, 0),
+    "version": (1, 1),
     "blender": (2, 80, 0),
     "location": "c:/tmp",
     "description": "Blender Float call from external app",
@@ -15,8 +15,6 @@ bl_info = {
 from bpy.props import StringProperty, IntProperty, BoolProperty
 
 # Addon prefs
-
-
 class BlenFloatPrefs(bpy.types.AddonPreferences):
     bl_idname = __package__
     bpypath =  StringProperty(
@@ -24,14 +22,6 @@ class BlenFloatPrefs(bpy.types.AddonPreferences):
             default='c:/tmp/',
             description = "Choose a name for the category of the panel",
     )
-    # bpypath = StringProperty \
-    #     (
-    #         name="bpy path",
-    #         default='c:/tmp/',
-
-    #         subtype='DIR_PATH',
-    #     )
-
     def draw(self, context):
         layout = self.layout
         layout.label(text="set tmp dir")
@@ -52,10 +42,13 @@ class BlenCall(bpy.types.Operator):
         try:
             with open(bpypath + 'bpy.py', 'r+') as f:
                 bpy_text = f.read()
-                # print(bpy_text)
                 if len(bpy_text):
                     print('BlenCall')
-                    exec(compile(bpy_text, '<string>', 'exec'))
+                    if 'exec' not in bpy.data.texts:
+                        bpy.data.texts.new('exec')
+                    bpy.data.texts['exec'].from_string(bpy_text)
+                    bpy.data.texts['exec'].as_module(bpy_text)
+                    bpy.data.texts['exec'].from_string('')
                     f.seek(0)
                     f.write('')
                     f.truncate()
