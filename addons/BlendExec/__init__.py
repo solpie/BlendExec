@@ -47,7 +47,7 @@ class BlenCall(bpy.types.Operator):
                     if 'exec' not in bpy.data.texts:
                         bpy.data.texts.new('exec')
                     bpy.data.texts['exec'].from_string(bpy_text)
-                    bpy.data.texts['exec'].as_module(bpy_text)
+                    bpy.data.texts['exec'].as_module()
                     bpy.data.texts['exec'].from_string('')
                     f.seek(0)
                     f.write('')
