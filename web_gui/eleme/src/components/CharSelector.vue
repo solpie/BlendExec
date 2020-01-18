@@ -9,7 +9,7 @@
         v-for="(item, n1) in bone_map"
         :key="n1"
         :label="item.tab"
-        style="height:600px"
+        style="height:600px;border: 1px solid #eee"
       >
         <el-image
           v-if="item.bg"
@@ -17,8 +17,11 @@
           :src="item.bg"
           fit="contain"
           disabled
-        ></el-image>
-        <div style="position:absolute;top:0px;">
+          id="map_bg"
+          @load="on_map_bg_loaded"
+          @click="on_create_node($event, item)"
+        />
+        <div :style="zoom_style">
           <el-radio
             draggable="true"
             v-for="(node, i) in item.node"
@@ -28,7 +31,8 @@
             :label="node.bone_name"
             :style="node.style"
             @change="on_sel_node(node)"
-            >{{ node.bone_name }}</el-radio
+            >{{ node.bone_name }}
+            {{ node.style.left + node.style.top }}</el-radio
           >
         </div>
         <el-collapse v-model="activeNames">
@@ -80,8 +84,15 @@ export default {
       new_count: 1,
       last_sel_node: null,
       activeNames: ["0"],
+      zoom_style:{
+          position:"absolute",
+          top:"0px",
+          zoom: 1.14
+      },
+      is_edit_mode: false,
       bone_map: null,
-      config: null
+      config: null,
+      config_fly: { scale: 1 }
     };
   },
   props: {
@@ -103,6 +114,20 @@ export default {
         }
         item.node = a;
       }
+    },
+    on_create_node(event, item) {
+      let map = document.getElementById("map_bg");
+      let scale = map.clientWidth / item.width;
+      this.config_fly.scale = scale;
+      console.log(
+        "on_create_node",
+        map.clientWidth,
+        scale,
+        event.target.x,
+        event.target.y
+      );
+      console.log("on_create_node", event, item.tab);
+      this.on_map_bg_loaded();
     },
     on_edit_bone_name() {
       this.last_sel_node.bone_name = this.bone;
@@ -135,14 +160,56 @@ export default {
       }
     },
     async on_save() {
+      let _ = (elem, prop, parent_ofs, scale) => {
+        let x = Number(elem.style[prop].replace("px", "")) + parent_ofs;
+        let a = Math.floor(x / scale);
+        return a;
+      };
+      let map = document.getElementById("map_bg");
       for (let item of this.bone_map) {
-        for (let node of item.node) {
-          let elem = document.getElementById(node.bone_name);
-          node.style.left = elem.style.left;
-          node.style.top = elem.style.top;
+        let scale = map.clientWidth / item.width;
+        if (scale) {
+          let rect = map.getBoundingClientRect();
+          for (let node of item.node) {
+            let elem = document.getElementById(node.bone_name);
+            console.log("before", elem.style.left);
+            node.x = _(elem, "left", 0, 1);
+            node.y = _(elem, "top", 0, 1);
+            //   node.style.left = _(elem, "left");
+            //   node.style.top = _(elem, "top");
+
+            //   console.log("fixed", elem.style.left);
+            //   node.style.left = Number(elem.style.left) / this.config_fly.scale;
+            //   node.style.top = elem.style.top / this.config_fly.scale;
+          }
         }
       }
       let res = await api.save_bone_map(this.config);
+    },
+    on_map_bg_loaded() {
+      console.log("on_map_bg_loaded");
+      let _ = (node, src_prop, prop, scale, ofs) => {
+        let src_n = node[src_prop];
+
+        let a = Math.floor(node[src_prop] * scale);
+        node.style[prop] = a + "px";
+        console.log("src", src_n, a);
+      };
+      let map = document.getElementById("map_bg");
+
+      for (let item of this.bone_map) {
+        let scale = map.clientWidth / item.width;
+        let rect = map.getBoundingClientRect();
+        console.log(item.tab, "scale", scale);
+        if (scale)
+        {
+            this.zoom_style.zoom = scale
+            for (let node of item.node) {
+              _(node, "x", "left", 1, rect.x);
+              _(node, "y", "top", 1, 0);
+            }
+        }
+      }
     },
     async init_ui() {
       let config = await api.get("/static/config.json");

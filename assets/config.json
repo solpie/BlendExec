@@ -3,71 +3,28 @@
         {
             "tab": "face",
             "bg": "/static/map/hand.jpg",
+            "width": 750,
             "rig_object_name": "rig",
             "node": [
                 {
                     "name": "",
-                    "bone_name": "c_hand_fk.r",
+                    "bone_name": "bone_3",
                     "style": {
-                        "left": "138px",
-                        "top": "363px"
-                    }
-                },
-                {
-                    "name": "",
-                    "bone_name": "c_hand_fk.l",
-                    "style": {
-                        "left": "230px",
-                        "top": "364px"
-                    }
-                },
-                {
-                    "name": "",
-                    "bone_name": "c_thumb1.r",
-                    "style": {
-                        "left": "-184px",
-                        "top": "285px"
-                    }
-                },
-                {
-                    "name": "",
-                    "bone_name": "c_thumb2.r",
-                    "style": {
-                        "left": "-336px",
-                        "top": "218px"
-                    }
-                },
-                {
-                    "name": "",
-                    "bone_name": "c_thumb3.r",
-                    "style": {
-                        "left": "-336px",
-                        "top": "147px"
-                    }
-                },
-                {
-                    "name": "",
-                    "bone_name": "bone_1",
-                    "style": {
-                        "left": "-14px",
-                        "top": "256px"
-                    }
+                        "left": "-326px",
+                        "top": "3px"
+                    },
+                    "x": 4,
+                    "y": 447
                 },
                 {
                     "name": "",
                     "bone_name": "bone_2",
                     "style": {
-                        "left": "-145px",
-                        "top": "169px"
-                    }
-                },
-                {
-                    "name": "",
-                    "bone_name": "bone_3",
-                    "style": {
-                        "left": "-250px",
-                        "top": "92px"
-                    }
+                        "left": "0px",
+                        "top": "0px"
+                    },
+                    "x": 90,
+                    "y": 50
                 }
             ]
         },
