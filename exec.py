@@ -37,6 +37,9 @@ class ExecInfo(object):
         super(ExecInfo, self).__init__(*args)
         self.code = "import bpy;bpy.ops.object.select_all()"
         # self.refresh_win()
+    def call_blender(self, hwnd):
+        win32gui.SetForegroundWindow(hwnd)
+        shell.SendKeys("{F5}")
 
     def callBlender(self):
         setBlenderForeground()

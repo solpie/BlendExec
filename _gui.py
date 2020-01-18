@@ -34,13 +34,8 @@ class MainWin ( wx.Frame ):
 
 		bSizer6 = wx.BoxSizer( wx.HORIZONTAL )
 
-		m_choice_hwndChoices = []
-		self.m_choice_hwnd = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_choice_hwndChoices, 0 )
-		self.m_choice_hwnd.SetSelection( 0 )
-		bSizer6.Add( self.m_choice_hwnd, 0, wx.ALL, 5 )
-
-		self.m_button3 = wx.Button( self, wx.ID_ANY, u"refresh", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer6.Add( self.m_button3, 0, wx.ALL, 5 )
+		self.m_button4 = wx.Button( self, wx.ID_ANY, u"Reload", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer6.Add( self.m_button4, 0, wx.ALL, 5 )
 
 
 		fgSizer4.Add( bSizer6, 1, wx.EXPAND, 5 )
@@ -57,9 +52,24 @@ class MainWin ( wx.Frame ):
 
 		fgSizer3.Add( bSizer5, 1, wx.EXPAND, 5 )
 
-		bSizer7 = wx.BoxSizer( wx.VERTICAL )
+		bSizer11 = wx.BoxSizer( wx.VERTICAL )
 
-		bSizer7.SetMinSize( wx.Size( 600,600 ) )
+		bSizer11.SetMinSize( wx.Size( 500,500 ) )
+		bSizer10 = wx.BoxSizer( wx.HORIZONTAL )
+
+		m_choice_hwndChoices = []
+		self.m_choice_hwnd = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, m_choice_hwndChoices, 0 )
+		self.m_choice_hwnd.SetSelection( 0 )
+		self.m_choice_hwnd.SetMinSize( wx.Size( 500,-1 ) )
+
+		bSizer10.Add( self.m_choice_hwnd, 0, wx.ALL, 5 )
+
+		self.m_button3 = wx.Button( self, wx.ID_ANY, u"refresh", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer10.Add( self.m_button3, 0, wx.ALL, 5 )
+
+
+		bSizer11.Add( bSizer10, 1, wx.EXPAND, 5 )
+
 		self.m_listbook2 = wx.Listbook( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LB_RIGHT )
 		self.m_listbook2.SetMinSize( wx.Size( -1,500 ) )
 
@@ -77,10 +87,10 @@ class MainWin ( wx.Frame ):
 		bSizer9.Fit( self.m_panel5 )
 		self.m_listbook2.AddPage( self.m_panel5, u"hand", False )
 
-		bSizer7.Add( self.m_listbook2, 1, wx.EXPAND |wx.ALL, 5 )
+		bSizer11.Add( self.m_listbook2, 1, wx.EXPAND |wx.ALL, 5 )
 
 
-		fgSizer3.Add( bSizer7, 1, wx.EXPAND, 5 )
+		fgSizer3.Add( bSizer11, 1, wx.EXPAND, 5 )
 
 
 		self.SetSizer( fgSizer3 )
@@ -89,22 +99,22 @@ class MainWin ( wx.Frame ):
 		self.Centre( wx.BOTH )
 
 		# Connect Events
+		self.m_listBox_bpy.Bind( wx.EVT_LISTBOX_DCLICK, self.on_list_DClick )
 		self.m_choice_hwnd.Bind( wx.EVT_CHOICE, self.on_choice_hwnd )
 		self.m_button3.Bind( wx.EVT_BUTTON, self.on_refresh_hwnd )
-		self.m_listBox_bpy.Bind( wx.EVT_LISTBOX_DCLICK, self.on_list_DClick )
 
 	def __del__( self ):
 		pass
 
 
 	# Virtual event handlers, overide them in your derived class
+	def on_list_DClick( self, event ):
+		event.Skip()
+
 	def on_choice_hwnd( self, event ):
 		event.Skip()
 
 	def on_refresh_hwnd( self, event ):
-		event.Skip()
-
-	def on_list_DClick( self, event ):
 		event.Skip()
 
 
