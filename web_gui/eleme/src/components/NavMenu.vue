@@ -21,7 +21,7 @@
         >
       </el-submenu>
       <!-- </el-menu-item> -->
-      <el-menu-item index="3">setting</el-menu-item>
+      <el-menu-item index="3" disabled>{{ title_hwnd }}</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -33,6 +33,7 @@ export default {
   data() {
     return {
       hwnd_arr: [],
+      title_hwnd: "no hwnd",
       activeIndex: "1",
       activeIndex2: "1"
     };
@@ -50,10 +51,14 @@ export default {
         let title = item[1];
         a.push({ hwnd: hwnd, title: title });
       }
+      if (a.length === 1) {
+        this.on_sel_hwnd(a[0]);
+      }
       this.hwnd_arr = a;
     },
     on_sel_hwnd(item) {
       api.hwnd = item.hwnd;
+      this.title_hwnd = item.title + " | " + item.hwnd;
       console.log("on_sel_hwnd", item.title, item.hwnd);
     },
     on_click_hwnd() {
