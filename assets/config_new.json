@@ -1,0 +1,35 @@
+{
+    "map": [
+        {
+            "tab": "face",
+            "bg": "/static/map/hand.jpg",
+            "rig_object_name": "rig",
+            "node": [
+                {
+                    "name": "",
+                    "bone_name": "c_hand_fk.r",
+                    "style": {
+                        "left": "122px",
+                        "top": "237px"
+                    }
+                },
+                {
+                    "name": "",
+                    "bone_name": "c_hand_fk.l",
+                    "style": {
+                        "left": "120px",
+                        "top": "70px"
+                    }
+                }
+            ]
+        },
+        {
+            "tab": "hand",
+            "node": []
+        },
+        {
+            "tab": "spine",
+            "node": []
+        }
+    ]
+}

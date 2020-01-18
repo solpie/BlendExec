@@ -13,6 +13,4 @@ def select_bone(rig, bone):
     armt = bpy.data.armatures[bpy.data.objects[rig].data.name]
     armt.bones[bone].select = True
     pass
-
-
 select_bone('rig', 'c_hand_fk.r')

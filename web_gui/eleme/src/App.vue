@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <el-container style="border: 1px solid #eee">
+    <el-container >
       <el-header>
         <NavMenu />
       </el-header>
-      <el-container>
-        <el-aside>
+      <el-container >
+        <el-aside style="border: 1px solid #eee">
           <BpyShelf />
         </el-aside>
         <el-main>
-          <HelloWorld msg="Welcome to Your Vue.js App" />
+          <CharSelector msg="Welcome to Your Vue.js App" />
         </el-main>
       </el-container>
     </el-container>
@@ -17,14 +17,14 @@
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
 import NavMenu from "./components/NavMenu.vue";
 import BpyShelf from "./components/BpyShelf";
+import CharSelector from "./components/CharSelector";
 export default {
   name: "app",
   components: {
     BpyShelf,
-    HelloWorld,
+    CharSelector,
     NavMenu
   },
   data() {
@@ -41,6 +41,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
