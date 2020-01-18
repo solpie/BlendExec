@@ -56,6 +56,7 @@ class ExecInfo(object):
         #     print(hwnd)
         #     pass
         # shell.SendKeys("+^%b")
+        
     def refresh_win(self, arr):
         win32gui.EnumWindows(window_enum_handler, arr)
         pass
