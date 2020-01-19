@@ -9,6 +9,12 @@ Vue.prototype.$eventHub = new Vue();
 window.onresize = (v) => {
   Vue.prototype.$eventHub.$emit('win_resize',v)
 }
+window.onkeydown = (e) => {
+  Vue.prototype.$eventHub.$emit('win_keydown',e)
+}
+window.onkeyup = (e) => {
+  Vue.prototype.$eventHub.$emit('win_keyup',e)
+}
 Vue.use(ElementUI);
 Vue.use(Select);
 Vue.use(Button);

@@ -5,14 +5,22 @@ export default {
   data() {
     return {
       bone: "",
-      new_count: 1,
       map_src_width: 0,
       last_sel_node: null,
+      is_edit_bone: false,
+      rig_object_name: "",
       activeNames: ["0"],
+      is_altKey: false,
       zoom_style: {
         position: "absolute",
         top: "0px",
         zoom: 1.14
+      },
+      bone_editor_style: {
+        position: "absolute",
+        left: "0px",
+        width: "200px",
+        top: "0px"
       },
       is_edit_mode: false,
       bone_map: null,
@@ -31,6 +39,20 @@ export default {
   mounted() {
     this.$eventHub.$on("win_resize", e => {
       this.update_map_zoom();
+    });
+    this.$eventHub.$on("win_keydown", e => {
+      this.is_altKey = e.altKey;
+    });
+    this.$eventHub.$on("win_keyup", e => {
+      this.is_altKey = e.altKey;
+      console.log(e);
+      if (e.key === "e") {
+        if (this.bone != "") {
+          this.is_edit_bone = true;
+        }
+      } else if (e.key == "g") {
+        this.on_edit();
+      }
     });
     this.init_ui();
   },
@@ -55,37 +77,50 @@ export default {
         this.zoom_style.zoom = scale;
       }
     },
+    attach_bone_editor(new_node) {
+      this.bone_editor_style.left = new_node.style.left;
+      this.bone_editor_style.top = new_node.style.top;
+    },
     on_create_node(event, item) {
       let map = document.getElementById("map_bg");
       let rect = map.getBoundingClientRect();
       let node_x = event.clientX - rect.x;
       let node_y = event.clientY - rect.y;
-      node_x = node_x * this.zoom_style.zoom;
-      node_y = node_y * this.zoom_style.zoom;
+      node_x = Math.floor(node_x / this.zoom_style.zoom);
+      node_y = Math.floor(node_y / this.zoom_style.zoom);
+      if (event.ctrlKey) {
+        this.is_edit_bone = true;
+        let new_node = {
+          name: "",
+          bone_name: "bone_" + (item.node.length + 1),
+          style: { left: node_x + "px", top: node_y + "px" }
+        };
+        item.node.push(new_node);
+        this.attach_bone_editor(new_node);
+        this.bone = new_node.bone_name;
+        this.last_sel_node = new_node;
+      }
       console.log("on_create_node", node_x, node_y, event, item.tab);
     },
     on_edit_bone_name() {
       this.last_sel_node.bone_name = this.bone;
       console.log(this.bone, this.last_sel_node.bone_name);
+      this.bone = "";
+      this.is_edit_bone = false;
     },
-    async on_sel_node(node) {
-      if (this.activeNames.length === 1 && this.activeNames[0] === "0") {
-        //    api.run_bpy(api.hwnd, item.path);
-        let bpy = api.bpy_sel_bone("rig", node.bone_name);
-        console.log(bpy);
-        let res = await api.run_bpy_str(bpy);
+    async on_sel_node(e, node) {
+      let is_alt = this.is_altKey;
+      if (is_alt) {
+        this.attach_bone_editor(node);
+        this.is_edit_bone = true;
+      } else {
+        if (!this.is_edit_mode) {
+          let bpy = api.bpy_sel_bone("rig", node.bone_name);
+          let res = await api.run_bpy_str(bpy);
+        }
       }
-      console.log(this.activeNames, node.bone_name);
+      console.log(e, this.activeNames, node.bone_name);
       this.last_sel_node = node;
-    },
-    on_add_node(item) {
-      let new_node = {
-        name: "",
-        bone_name: "bone_" + this.new_count,
-        style: { left: "0px", top: "0px" }
-      };
-      item.node.push(new_node);
-      this.new_count++;
     },
     on_edit() {
       for (let item of this.bone_map) {
@@ -103,8 +138,8 @@ export default {
           for (let node of item.node) {
             let elem = document.getElementById(node.bone_name);
             console.log("before", elem.style.left);
-              node.style.left = elem.style.left
-              node.style.top = elem.style.top
+            node.style.left = elem.style.left;
+            node.style.top = elem.style.top;
           }
         }
       }
@@ -118,7 +153,7 @@ export default {
       let _ = (node, src_prop, prop, scale, ofs) => {
         let src_n = node[src_prop];
 
-        let a = Math.floor(node[src_prop] * scale)+ofs;
+        let a = Math.floor(node[src_prop] * scale) + ofs;
         node.style[prop] = a + "px";
         console.log("src", src_n, a);
       };

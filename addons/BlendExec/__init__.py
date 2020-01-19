@@ -42,18 +42,24 @@ class BlenCall(bpy.types.Operator):
         try:
             with open(bpypath + 'bpy.py', 'r+') as f:
                 bpy_text = f.read()
-                if len(bpy_text):
-                    print('BlenCall')
-                    if 'exec' not in bpy.data.texts:
-                        bpy.data.texts.new('exec')
-                    bpy.data.texts['exec'].from_string(bpy_text)
-                    bpy.data.texts['exec'].as_module()
-                    bpy.data.texts['exec'].from_string('')
-                    f.seek(0)
-                    f.write('')
-                    f.truncate()
+                print('BlenCall')
+                if '#[as_module]' in bpy_text:
+                    print('as_module')
+                    if len(bpy_text):
+                        if 'exec' not in bpy.data.texts:
+                            bpy.data.texts.new('exec')
+                        bpy.data.texts['exec'].from_string(bpy_text)
+                        bpy.data.texts['exec'].as_module()
+                        bpy.data.texts['exec'].from_string('')
+                    else:
+                        print('no bpy')
                 else:
-                    print('no bpy')
+                    print('exec compile')
+                    exec(compile(bpy_text, '<string>', 'exec'))
+                    pass
+                f.seek(0)
+                f.write('')
+                f.truncate()
                 f.close()
                 pass
         except Exception as e:

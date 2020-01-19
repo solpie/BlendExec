@@ -80,7 +80,7 @@ export const api = {
   },
   async run_bpy(hwnd, bpy_filename) {
     if (hwnd) {
-      let res = await axios.post(`/exec`, { hwnd: hwnd, bpy: bpy_filename });
+      let res = await axios.post(`/exec`, { hwnd: hwnd, bpy: bpy_filename ,str:''});
       console.log(res);
       return new Promise(resolve => {
         resolve(res);

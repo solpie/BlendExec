@@ -1,3 +1,4 @@
+#[as_module]
 import bpy
 
 

@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-    <el-container >
+    <el-container>
       <el-header>
         <NavMenu />
       </el-header>
-      <el-container >
+      <el-container>
         <el-aside style="border: 1px solid #eee">
           <BpyShelf />
         </el-aside>
-        <el-main>
+        <el-main style="padding:0px">
           <CharSelector msg="Welcome to Your Vue.js App" />
         </el-main>
       </el-container>
