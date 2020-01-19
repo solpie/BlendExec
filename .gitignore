@@ -1,6 +1,7 @@
 
 dist/
 build/
+**.pyc
 *.pyc
 
 

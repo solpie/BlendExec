@@ -1,3 +1,4 @@
+import time
 from exec import ExecInfo
 from threading import Thread
 from flask import Flask, jsonify, request, url_for
@@ -5,12 +6,17 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
 from PyQt5.QtCore import QUrl, QEventLoop, QTimer
 import os
+import sys
+
+win_title = 'BlendExec___#'
 
 
 class BrowserRender(QWebEngineView):
     def __init__(self, display=True):
         self.app = QApplication([])
         QWebEngineView.__init__(self)
+        self.move(10, 10)
+        self.setWindowTitle(win_title)
         self.html = ''
 
     def open(self, url):
@@ -58,6 +64,14 @@ def get_bpy_script():
 #     return url_for('static', filename='config.json')
 
 
+@app.route('/sendkey', methods=['POST'])
+def send_key():
+    data = request.json
+    key = data['key']
+    exec_info.send_key(key)
+    return "OK"
+
+
 @app.route('/save', methods=['POST'])
 def save_file():
     data = request.json
@@ -72,15 +86,11 @@ def save_file():
 @app.route('/exec', methods=['POST'])
 def call_blender():
     data = request.json
-    hwnd = data['hwnd']
-
-    
-    
+    hwnd = exec_info.blender_hwnd
     if hwnd != None:
         bpy_str = data['str']
         if bpy_str:
             bpy = bpy_str
-            pass
         else:
             bpy_name = data['bpy']
             bpy_filename = bpy_name
@@ -98,6 +108,52 @@ def call_blender():
         return 'no hwnd'
 
 
+def blender_callout(mode):
+    print('blender_callout mode', mode)
+    x, y = exec_info.get_cursor_pos()
+    hwnd = exec_info.get_active_hwnd()
+    title = exec_info.get_win_title(hwnd)
+    exec_info.blender_hwnd = hwnd
+    try:
+        exec_info.set_win_top(win_title)
+    except Exception as e:
+        blender_callout()
+        print(e)
+        pass
+
+    print(title, hwnd, x, y)
+    return 'ok'
+
+
+def check_callout():
+    path_callout = os.path.join(tmp_path, 'callout.x')
+    while True:
+        time.sleep(0.05)
+        if os.path.isfile(path_callout):
+            with open(path_callout, 'r+') as f:
+                lines = f.readlines()
+                mode = ''
+                for line in lines:
+                    print(line)
+                    if 'eof' in line:
+                        print('exist  callout')
+                        blender_callout(mode)
+                        f.seek(0)
+                        f.write('')
+                        f.truncate()
+                        f.close()
+                    elif 'mode' in line:
+                        mode = line[5:]
+                        print('mode[[[[]]]]', mode)
+            pass
+
+
+def start_check_callout():
+    t = Thread(target=check_callout)
+    t.daemon = True
+    t.start()
+
+
 is_debug = True
 
 
@@ -105,18 +161,31 @@ def main():
     app_thread = Thread(target=app.run, args=["localhost", port])
     app_thread.daemon = True
     app_thread.start()
+
     br = BrowserRender()
-    if is_debug:
-        br.open('http://localhost:8080/')
-    else:
-        br.open('http://localhost:'+str(port)+'/')
-        pass
+    # if is_debug:
+    #     br.open('http://localhost:8080/')
+    # else:
+    br.open('http://localhost:'+str(port)+'/')
+    pass
+
+
+def dev_gui():
+    br = BrowserRender()
+    br.open('http://localhost:8067')
 
 
 def debug_server():
+    start_check_callout()
+    # app.run("localhost", port, debug=False)
     app.run("localhost", port, debug=True)
 
 
 if __name__ == '__main__':
-    debug_server()
-    # main()
+    args = sys.argv[1]
+    for arg in sys.argv:
+        if '-gui' in arg:
+            dev_gui()
+        elif '-server' in arg:
+            debug_server()
+            print(sys.argv[1])

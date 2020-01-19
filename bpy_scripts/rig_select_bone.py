@@ -1,3 +1,4 @@
+#[hide in shelf]
 import bpy
 
 

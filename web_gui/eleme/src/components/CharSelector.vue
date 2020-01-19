@@ -36,8 +36,37 @@
             disabled
             id="map_bg"
             @load="on_map_bg_loaded"
-            @click="on_create_node($event, item)"
           />
+          <div
+            style="position:absolute;left:0px;top:0px;width:100%;height:100%;"
+          >
+            <div id="modal1" @click="on_create_node($event, item)"></div>
+            <el-switch
+              v-model="is_edit_mode"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            >
+            </el-switch>
+          </div>
+          <el-card
+            id="bone_editor"
+            v-show="is_edit_bone"
+            :style="bone_editor_style"
+          >
+            <el-row>
+              bone name
+              <el-input size="mini" v-model="bone"> </el-input>
+            </el-row>
+            <el-row>
+              rig object name
+              <el-input size="mini" v-model="item.rig_object_name"> </el-input>
+            </el-row>
+            <el-row>
+              <el-button size="mini" @click="on_del_node">Del</el-button>
+              <el-button size="mini" @click="on_edit_bone_name">ok</el-button>
+              <el-button size="mini" @click="on_save">Save</el-button>
+            </el-row>
+          </el-card>
           <div id="map_container" :style="zoom_style">
             <div
               v-for="(node, i) in item.node"
@@ -45,50 +74,25 @@
               style="position:absolute"
             >
               <el-radio
+                size="medium"
                 draggable="true"
                 :id="node.bone_name"
                 v-model="bone"
                 :label="node.bone_name"
                 :style="node.style"
                 @change="on_sel_node($event, node)"
-                >{{ node.bone_name }}
-                <span v-show="is_edit_bone">
-                  ({{
-                    node.style.left.replace("px", "") +
-                      "," +
-                      node.style.top.replace("px", "")
-                  }})
+              >
+                <span v-show="is_edit_mode">
+                  {{ node.bone_name }}
+                  <span v-show="is_edit_bone">
+                    ({{
+                      node.style.left.replace("px", "") +
+                        "," +
+                        node.style.top.replace("px", "")
+                    }})
+                  </span>
                 </span>
               </el-radio>
-            </div>
-            <el-card
-              id="bone_editor"
-              v-show="is_edit_bone"
-              :style="bone_editor_style"
-            >
-              <el-row><br /> </el-row>
-              <el-row>
-                bone name
-                <el-input size="mini" v-model="bone"> </el-input>
-              </el-row>
-              <el-row>
-                rig object name
-                <el-input size="mini" v-model="item.rig_object_name">
-                </el-input>
-              </el-row>
-              <el-row>
-                <el-button size="mini" @click="on_del_node">Del</el-button>
-                <el-button size="mini" @click="on_edit_bone_name">ok</el-button>
-                <el-button size="mini" @click="on_save">Save</el-button>
-              </el-row>
-            </el-card>
-            <div style="position:absolute;left:0px;">
-              <el-switch
-                v-model="is_edit_mode"
-                active-color="#13ce66"
-                inactive-color="#ff4949"
-              >
-              </el-switch>
             </div>
           </div>
         </div>
@@ -96,4 +100,16 @@
     </el-tabs>
   </div>
 </template>
+<style>
+#modal1 {
+  position: absolute;
+  left: 0px;
+  width: 1920px;
+  z-index: 0;
+  /* pointer-events: none; */
+  height: 1080px;
+  background: #000;
+  opacity: 0.2;
+}
+</style>
 <script src="./char_selector.js"></script>

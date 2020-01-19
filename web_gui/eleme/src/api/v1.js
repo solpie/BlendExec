@@ -1,6 +1,6 @@
 import axios from "axios";
 const sel_bone = (rig, bone_name) => {
-    return `
+  return `
 import bpy
 def select_bone(rig, bone):
     #rig = 'rig'
@@ -68,25 +68,36 @@ export const api = {
   },
   async run_bpy_str(str) {
     let hwnd = api.hwnd;
-    if (hwnd) {
-      let res = await axios.post(`/exec`, { hwnd: hwnd, str: str });
-      console.log(res);
-      return new Promise(resolve => {
-        resolve(res);
-      });
-    } else {
-      console.log("no hwnd");
-    }
+    // if (hwnd) {
+    let res = await axios.post(`/exec`, { hwnd: hwnd, str: str });
+    console.log(res);
+    return new Promise(resolve => {
+      resolve(res);
+    });
+    // } else {
+    //   console.log("no hwnd");
+    // }
+  },
+  async send_key(k) {
+    let res = await axios.post(`/sendkey`, { key: k });
+    console.log(res);
+    return new Promise(resolve => {
+      resolve(res);
+    });
   },
   async run_bpy(hwnd, bpy_filename) {
-    if (hwnd) {
-      let res = await axios.post(`/exec`, { hwnd: hwnd, bpy: bpy_filename ,str:''});
-      console.log(res);
-      return new Promise(resolve => {
-        resolve(res);
-      });
-    } else {
-      console.log("no hwnd");
-    }
+    // if (hwnd) {
+    let res = await axios.post(`/exec`, {
+      hwnd: hwnd,
+      bpy: bpy_filename,
+      str: ""
+    });
+    console.log(res);
+    return new Promise(resolve => {
+      resolve(res);
+    });
+    // } else {
+    //   console.log("no hwnd");
+    // }
   }
 };

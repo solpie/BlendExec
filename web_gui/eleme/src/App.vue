@@ -5,7 +5,7 @@
         <NavMenu />
       </el-header>
       <el-container>
-        <el-aside style="border: 1px solid #eee">
+        <el-aside v-show="true" style="border: 1px solid #eee">
           <BpyShelf />
         </el-aside>
         <el-main style="padding:0px">

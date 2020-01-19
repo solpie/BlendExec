@@ -19,6 +19,7 @@ export default {
       bone_editor_style: {
         position: "absolute",
         left: "0px",
+        "z-index": 9999,
         width: "200px",
         top: "0px"
       },
@@ -44,7 +45,7 @@ export default {
       this.is_altKey = e.altKey;
     });
     this.$eventHub.$on("win_keyup", e => {
-      this.is_altKey = e.altKey;
+      // this.is_altKey = e.altKey;
       console.log(e);
       if (e.key === "e") {
         if (this.bone != "") {
@@ -109,15 +110,14 @@ export default {
       this.is_edit_bone = false;
     },
     async on_sel_node(e, node) {
-      let is_alt = this.is_altKey;
-      if (is_alt) {
+      // let is_alt = this.is_altKey;
+      if (!this.is_edit_mode) {
+        let bpy = api.bpy_sel_bone("rig", node.bone_name);
+        let res = await api.run_bpy_str(bpy);
+        // api.send_key('r')
+      } else {
         this.attach_bone_editor(node);
         this.is_edit_bone = true;
-      } else {
-        if (!this.is_edit_mode) {
-          let bpy = api.bpy_sel_bone("rig", node.bone_name);
-          let res = await api.run_bpy_str(bpy);
-        }
       }
       console.log(e, this.activeNames, node.bone_name);
       this.last_sel_node = node;
