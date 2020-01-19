@@ -5,7 +5,7 @@
         <NavMenu />
       </el-header>
       <el-container>
-        <el-aside v-show="true" style="border: 1px solid #eee">
+        <el-aside v-show="is_show_shelf" style="border: 1px solid #eee">
           <BpyShelf />
         </el-aside>
         <el-main style="padding:0px">
@@ -27,8 +27,14 @@ export default {
     CharSelector,
     NavMenu
   },
+  mounted() {
+    this.$eventHub.$on("show_shelf", v => {
+      this.is_show_shelf = v;
+    });
+  },
   data() {
     return {
+      is_show_shelf: true,
       bpy_script_arr: ["1", "2"]
     };
   }

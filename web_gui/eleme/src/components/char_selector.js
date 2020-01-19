@@ -1,5 +1,8 @@
 import { api } from "@/api/v1.js";
 import { dragElement } from "@/utils/drag.js";
+function px_n(p) {
+  return Number(p.replace("px", ""));
+}
 export default {
   name: "CharSelector",
   data() {
@@ -52,6 +55,7 @@ export default {
           this.is_edit_bone = true;
         }
       } else if (e.key == "g") {
+        this.is_edit_bone = false;
         this.on_edit();
       }
     });
@@ -103,6 +107,24 @@ export default {
       }
       console.log("on_create_node", node_x, node_y, event, item.tab);
     },
+    on_mirror_bone(item) {
+      // let mirror = ()
+      let a = [];
+      for (let node of item.node) {
+        if (node.bone_name.search(".r") > -1) {
+          let node_x = item.width - px_n(node.style.left);
+          let new_node = {
+            name: "",
+            bone_name: node.bone_name.replace(".r", ".l"),
+            style: { left: node_x + "px", top: node.style.top }
+          };
+          console.log("mirror node", new_node.bone_name);
+          a.push(new_node);
+        }
+      }
+      item.node = item.node.concat(a);
+      console.log("on_mirror_bone", item.tab);
+    },
     on_edit_bone_name() {
       this.last_sel_node.bone_name = this.bone;
       console.log(this.bone, this.last_sel_node.bone_name);
@@ -117,7 +139,7 @@ export default {
         // api.send_key('r')
       } else {
         this.attach_bone_editor(node);
-        this.is_edit_bone = true;
+        // this.is_edit_bone = true;
       }
       console.log(e, this.activeNames, node.bone_name);
       this.last_sel_node = node;

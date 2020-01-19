@@ -17,6 +17,7 @@ class BrowserRender(QWebEngineView):
         QWebEngineView.__init__(self)
         self.move(10, 10)
         self.setWindowTitle(win_title)
+        self.resize(1080,640)
         self.html = ''
 
     def open(self, url):

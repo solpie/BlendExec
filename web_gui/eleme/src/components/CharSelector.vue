@@ -41,12 +41,6 @@
             style="position:absolute;left:0px;top:0px;width:100%;height:100%;"
           >
             <div id="modal1" @click="on_create_node($event, item)"></div>
-            <el-switch
-              v-model="is_edit_mode"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-            >
-            </el-switch>
           </div>
           <el-card
             id="bone_editor"
@@ -67,6 +61,21 @@
               <el-button size="mini" @click="on_save">Save</el-button>
             </el-row>
           </el-card>
+          <div style="position:absolute;left:0px;top:0px">
+           
+            <el-button
+            size="mini"
+              @click="on_mirror_bone(item)"
+              >Mirror bone</el-button
+            >
+            edit mode
+             <el-switch
+              v-model="is_edit_mode"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            >
+            </el-switch>
+          </div>
           <div id="map_container" :style="zoom_style">
             <div
               v-for="(node, i) in item.node"
@@ -105,11 +114,11 @@
   position: absolute;
   left: 0px;
   width: 1920px;
-  z-index: 0;
+  /* z-index: 0; */
   /* pointer-events: none; */
   height: 1080px;
   background: #000;
-  opacity: 0.2;
+  opacity: 0.0;
 }
 </style>
 <script src="./char_selector.js"></script>
