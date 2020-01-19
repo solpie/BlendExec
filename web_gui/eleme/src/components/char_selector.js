@@ -192,7 +192,7 @@ export default {
       }
     },
     async init_ui() {
-      let config = await api.get("/static/config.json");
+      let config = await api.get("/config.json");
       this.config = config;
       this.bone_map = config.map;
       console.log(api, config);

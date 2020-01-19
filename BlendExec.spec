@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['WebGui.py'],
+a = Analysis(['BlendExec.py'],
              pathex=['F:\\projects\\BlendExec'],
              binaries=[],
              datas=[],
@@ -23,7 +23,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='WebGui',
+          name='BlendExec',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
