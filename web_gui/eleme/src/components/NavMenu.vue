@@ -9,6 +9,7 @@
         inactive-color="#ff4949"
         @change="on_show_shelf_changed"
       >
+      show shelf
       </el-switch>
     </el-row>
   </div>

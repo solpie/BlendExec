@@ -3,11 +3,7 @@ import win32gui
 import win32api
 import win32com.client
 
-# shell = win32com.client.Dispatch("WScript.Shell")
-# shell.Run("blender")
-# shell.SendKeys("{F5}")
 hwnd_map = {}
-# set Blender Foreground
 find_title = ""
 
 def window_enum_handler(hwnd, resultList):
@@ -83,14 +79,14 @@ class ExecInfo(object):
         # shell.SendKeys("+^%b")
     def set_win_top_by_hwnd(self, hwnd):
         win32gui.SetForegroundWindow(hwnd)
-        pass
+        
     def set_win_top(self, title):
         arr = []
         find_title = title
         win32gui.EnumWindows(window_enum_handler2, arr)
         for hwnd, title2 in arr:
             if find_title in title2:
-                # shell.AppActivate(title2)
+                print('set_win_top',title2)
                 win32gui.SetForegroundWindow(hwnd)
                 return hwnd
 

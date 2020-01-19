@@ -9,7 +9,7 @@ import os
 import sys
 
 win_title = 'BlendExec___#'
-
+app_1 = {"win":None}
 
 class BrowserRender(QWebEngineView):
     def __init__(self, display=True):
@@ -117,10 +117,15 @@ def blender_callout(mode):
     hwnd = exec_info.get_active_hwnd()
     title = exec_info.get_win_title(hwnd)
     exec_info.blender_hwnd = hwnd
+    print(title,x,y)
     try:
-        exec_info.set_win_top(win_title)
+        if app_1['win']:
+            app_1['win'].activateWindow()
+            pass
+        else:
+            exec_info.set_win_top(win_title)
     except Exception as e:
-        blender_callout()
+        blender_callout(mode)
         print(e)
         pass
 
@@ -147,7 +152,6 @@ def check_callout():
                         f.close()
                     elif 'mode' in line:
                         mode = line[5:]
-                        print('mode[[[[]]]]', mode)
             pass
 
 
@@ -164,9 +168,11 @@ def main():
     app_thread = Thread(target=app.run, args=["localhost", port])
     app_thread.daemon = True
     app_thread.start()
+    start_check_callout()
     br = BrowserRender()
     url = 'http://localhost:' + str(port) + '/index.html'
-    print('index url',url)
+    print('index url', url)
+    app_1['win'] =br
     br.open(url)
     pass
 

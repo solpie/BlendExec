@@ -4,8 +4,8 @@
       <el-header>
         <NavMenu />
       </el-header>
-      <el-container>
-        <el-aside v-show="is_show_shelf" style="border: 1px solid #eee">
+      <el-container style="height:1080px;overflow: hidden;">
+        <el-aside v-show="is_show_shelf" style="border: 1px solid #222">
           <BpyShelf />
         </el-aside>
         <el-main style="padding:0px">
@@ -46,6 +46,10 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  
+  color: #eee;
+}
+body{
+  background: #2b2b2b
 }
 </style>

@@ -136,7 +136,7 @@ export default {
       if (!this.is_edit_mode) {
         let bpy = api.bpy_sel_bone("rig", node.bone_name);
         let res = await api.run_bpy_str(bpy);
-        // api.send_key('r')
+        api.send_key("r");
       } else {
         this.attach_bone_editor(node);
         // this.is_edit_bone = true;

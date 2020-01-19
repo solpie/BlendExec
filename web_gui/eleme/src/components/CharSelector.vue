@@ -25,7 +25,7 @@
         v-for="(item, n1) in bone_map"
         :key="n1"
         :label="item.tab"
-        style="height:600px;border: 1px solid #eee"
+        style="height:600px;border: 1px solid #222"
       >
         <div>
           <el-image
