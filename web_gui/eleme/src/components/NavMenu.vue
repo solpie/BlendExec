@@ -57,6 +57,9 @@ export default {
     on_show_shelf_changed() {
       console.log("on_show_shelf_changed", this.is_show_shelf);
       this.$eventHub.$emit("show_shelf", this.is_show_shelf);
+      setTimeout(() => {
+        this.$eventHub.$emit("win_resize");
+      }, 20);
     },
     goBack() {
       window.location.reload();
