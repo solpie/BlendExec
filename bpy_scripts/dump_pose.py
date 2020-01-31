@@ -1,5 +1,5 @@
 import bpy
-
+import base64
 
 def dump_pose():
     rig = 'rig'
@@ -22,6 +22,7 @@ def dump_pose():
         line_str += 'bones["'+b.name+'"]=[' + str(rot_euler)+","+str(location)+","+str(scale)+"]\n"
         # line_str +="$".join([b.name , str(rot_euler),str(location),str(scale)])+'\n'
         print(line_str)
+    #save camera data
     line_str+='camera={}\n'
     cam = bpy.context.scene.camera
     loc = cam.location
@@ -43,13 +44,40 @@ def dump_pose():
     line_str+='camera["type"]="'+cam_type+'"'+"\n"
     line_str+='camera["lens_unit"]="'+lens_unit+'"'+"\n"
     line_str+='camera["lens"]='+str(lens)+"\n"
-    with open('c:\\tmp\\pose_1.txt', 'w') as f:
+
+    bpy.ops.pose.select_all(action='DESELECT')
+    #gen thumbnail
+    render = bpy.context.scene.render
+    render_w = render.resolution_x
+    render_h = render.resolution_y
+    render_perc = render.resolution_percentage
+    format = render.image_settings.file_format
+    thumbnail_w = 1024
+    
+    img_path = "c:/tmp/thumbnail.jpg"
+    if render_w>render_h:
+        render.resolution_percentage = thumbnail_w*100/render_w
+    else:
+        render.resolution_percentage = thumbnail_w*100/render_h
+        
+    render.image_settings.file_format = "JPEG"
+    bpy.ops.render.render()
+    bpy.data.images['Render Result'].save_render(img_path)
+    render.resolution_percentage = render_perc
+    render.image_settings.file_format = format
+    
+
+    with open(img_path, 'rb') as f:
+        image_data = f.read()
+        base64_data = base64.b64encode(image_data).decode('utf-8')  # base64编码
+        #print(base64_data)
+        f.close()
+    line_str+='thumbnail="'+'data:image/jpg;base64,'+str(base64_data)+'"\n'
+        # with open(img_path+'.txt','w') as f2:
+        #     f2.write('data:image/jpg;base64,'+str(base64_data))
+        #     f2.close()
+    #write data
+    with open('c:/tmp/pose_1.txt', 'w') as f:
         f.write(line_str)
         f.close()
-    bpy.ops.pose.select_all(action='DESELECT')
-
-
-    bpy.ops.render.render()
-    bpy.data.images['Render Result'].save_render("c:/tmp/2.jpg")
-
 dump_pose()
