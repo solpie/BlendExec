@@ -2,3 +2,4 @@ pywin32
 flask
 pyqt
 pyqtwebengine
+pillow

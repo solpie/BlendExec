@@ -154,6 +154,7 @@ export default {
     async on_save() {
       let map = document.getElementById("map_bg");
       for (let item of this.bone_map) {
+        // item.type = 'bone'
         let scale = map.clientWidth / item.width;
         if (scale) {
           let rect = map.getBoundingClientRect();
