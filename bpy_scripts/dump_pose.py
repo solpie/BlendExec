@@ -1,8 +1,13 @@
 import bpy
 import base64
+import os
 
 def dump_pose():
     rig = 'rig'
+    tmp_path = 'c:/tmp'
+    data_filepath = os.path.join(tmp_path,'pose.py')
+    thumbnail_filepath = os.path.join(tmp_path,'thumbnail.jpg')
+
     mode = bpy.context.mode
     if mode == 'OBJECT':
         bpy.ops.object.select_all(action="DESELECT")
@@ -54,7 +59,6 @@ def dump_pose():
     format = render.image_settings.file_format
     thumbnail_w = 1024
     
-    img_path = "c:/tmp/thumbnail.jpg"
     if render_w>render_h:
         render.resolution_percentage = thumbnail_w*100/render_w
     else:
@@ -62,12 +66,12 @@ def dump_pose():
         
     render.image_settings.file_format = "JPEG"
     bpy.ops.render.render()
-    bpy.data.images['Render Result'].save_render(img_path)
+    bpy.data.images['Render Result'].save_render(thumbnail_filepath)
     render.resolution_percentage = render_perc
     render.image_settings.file_format = format
     
 
-    with open(img_path, 'rb') as f:
+    with open(thumbnail_filepath, 'rb') as f:
         image_data = f.read()
         base64_data = base64.b64encode(image_data).decode('utf-8')  # base64编码
         #print(base64_data)
@@ -77,7 +81,7 @@ def dump_pose():
         #     f2.write('data:image/jpg;base64,'+str(base64_data))
         #     f2.close()
     #write data
-    with open('c:/tmp/pose_1.txt', 'w') as f:
+    with open(data_filepath, 'w') as f:
         f.write(line_str)
         f.close()
 dump_pose()

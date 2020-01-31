@@ -1,9 +1,11 @@
 import bpy
-
+import os
 
 def paser_pose():
     file_globals = {}
-    exec(open(r'f:\\tmp\\pose_1.txt').read(),file_globals)
+    tmp_path = 'c:/tmp'
+    data_filepath = os.path.join(tmp_path,'pose.py')
+    exec(open(data_filepath).read(),file_globals)
     bones = file_globals["bones"]
     print(bones)
     rig = 'rig'

@@ -1,10 +1,15 @@
 import { api } from "@/api/v1.js";
 import { dragElement } from "@/utils/drag.js";
+import  Poselib  from "./Poselib";
+
 function px_n(p) {
   return Number(p.replace("px", ""));
 }
-export default {
+export default {  
   name: "CharSelector",
+  components: {
+    Poselib
+  },
   data() {
     return {
       bone: "",

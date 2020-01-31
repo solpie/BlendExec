@@ -4,6 +4,7 @@ import '../theme/index.css'
 import App from "./App.vue";
 import { Button, Select, Menu, MenuItem, MenuItemGroup } from "element-ui";
 import axios from "axios";
+
 Vue.prototype.$http = axios;
 Vue.prototype.$eventHub = new Vue(); 
 window.onresize = (v) => {

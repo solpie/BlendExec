@@ -8,9 +8,7 @@
         </template>
         <template slot-scope="scope">
           <el-button size="mini" @click="on_run(scope.row)">Run</el-button>
-          <el-button size="mini" @click="handleDelete(scope.$index, scope.row)"
-            >Edit</el-button
-          >
+          <el-button size="mini" @click="handleDelete(scope.$index, scope.row)">Edit</el-button>
         </template>
       </el-table-column>
     </el-table>

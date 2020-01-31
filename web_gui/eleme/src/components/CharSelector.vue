@@ -62,12 +62,11 @@
             </el-row>
           </el-card>
           <div style="position:absolute;left:0px;top:0px">
-           
             <el-button
-            size="mini"
-              @click="on_mirror_bone(item)"
-              >Mirror bone</el-button
-            >
+              size="mini"
+              @click="on_mirror_bone(item)">
+            Mirror bone
+            </el-button>
             edit mode
              <el-switch
               v-model="is_edit_mode"
@@ -76,13 +75,14 @@
             >
             </el-switch>
           </div>
+
           <div id="map_container" :style="zoom_style">
             <div
               v-for="(node, i) in item.node"
               :key="i"
               style="position:absolute"
             >
-              <el-radio
+              <el-radio  v-if="item.type==='bone'"
                 size="medium"
                 draggable="true"
                 :id="node.bone_name"
@@ -102,6 +102,12 @@
                   </span>
                 </span>
               </el-radio>
+              <div
+                v-if="item.type==='pose'"
+                style="position:absolute">
+                233
+              <Poselib/>
+              </div>
             </div>
           </div>
         </div>
