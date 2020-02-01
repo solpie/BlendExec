@@ -1,15 +1,18 @@
 import { api } from "@/api/v1.js";
 import { dragElement } from "@/utils/drag.js";
-import  Poselib  from "./Poselib";
+import Poselib from "./Poselib";
 
 function px_n(p) {
   return Number(p.replace("px", ""));
 }
-export default {  
+export default {
   name: "CharSelector",
   components: {
     Poselib
   },
+  // watch: {
+
+  // },
   data() {
     return {
       bone: "",
@@ -18,6 +21,8 @@ export default {
       is_edit_bone: false,
       rig_object_name: "",
       activeNames: ["0"],
+      is_show_poselib: false,
+      sel_tab: "",
       is_altKey: false,
       zoom_style: {
         position: "absolute",
@@ -136,6 +141,13 @@ export default {
       this.bone = "";
       this.is_edit_bone = false;
     },
+    on_tab_changed(e) {
+      console.log("tab change", this.sel_tab);
+      let tab_data = this.bone_map[this.sel_tab];
+      if (tab_data.type === "pose") {
+        this.is_show_poselib = true;
+      }
+    },
     async on_sel_node(e, node) {
       // let is_alt = this.is_altKey;
       if (!this.is_edit_mode) {
@@ -197,10 +209,16 @@ export default {
         }
       }
     },
+    on_show_poselib() {
+      // this.is_show_poselib = false;
+    },
     async init_ui() {
       let config = await api.get("/config.json");
       this.config = config;
-      this.bone_map = config.map;
+      this.bone_map = config.map.concat(config.poselib);
+
+      // this.$store['config'] = config
+      this.poselib = config.poselib;
       console.log(api, config);
     }
   }

@@ -20,6 +20,8 @@
       v-if="bone_map"
       tab-position="right"
       style="height: 600px;position:relative"
+      @tab-click="on_tab_changed"
+      v-model="sel_tab"
     >
       <el-tab-pane
         v-for="(item, n1) in bone_map"
@@ -61,14 +63,15 @@
               <el-button size="mini" @click="on_save">Save</el-button>
             </el-row>
           </el-card>
-          <div style="position:absolute;left:0px;top:0px">
-            <el-button
-              size="mini"
-              @click="on_mirror_bone(item)">
-            Mirror bone
+          <div
+            v-show="!is_show_poselib"
+            style="position:absolute;left:0px;top:0px"
+          >
+            <el-button size="mini" @click="on_mirror_bone(item)">
+              Mirror bone
             </el-button>
             edit mode
-             <el-switch
+            <el-switch
               v-model="is_edit_mode"
               active-color="#13ce66"
               inactive-color="#ff4949"
@@ -82,7 +85,8 @@
               :key="i"
               style="position:absolute"
             >
-              <el-radio  v-if="item.type==='bone'"
+              <el-radio
+                v-if="item.type === 'bone'"
                 size="medium"
                 draggable="true"
                 :id="node.bone_name"
@@ -102,11 +106,8 @@
                   </span>
                 </span>
               </el-radio>
-              <div
-                v-if="item.type==='pose'"
-                style="position:absolute">
-                233
-              <Poselib/>
+              <div v-if="item.type === 'pose'" style="position:absolute">
+                <Poselib :pose_data="item" @show="on_show_poselib" />
               </div>
             </div>
           </div>
@@ -124,7 +125,7 @@
   /* pointer-events: none; */
   height: 1080px;
   background: #000;
-  opacity: 0.0;
+  opacity: 0;
 }
 </style>
 <script src="./char_selector.js"></script>

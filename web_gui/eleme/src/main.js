@@ -7,6 +7,7 @@ import axios from "axios";
 
 Vue.prototype.$http = axios;
 Vue.prototype.$eventHub = new Vue(); 
+Vue.prototype.$store = {}
 window.onresize = (v) => {
   Vue.prototype.$eventHub.$emit('win_resize',v)
 }
