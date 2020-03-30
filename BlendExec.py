@@ -20,6 +20,7 @@ class BrowserRender(QWebEngineView):
         self.resize(1080, 640)
         self.page().profile().clearHttpCache()
         self.html = ''
+        self.setWindowOpacity(0.3)
 
     def open(self, url):
         self.load(QUrl(url))
