@@ -1,3 +1,4 @@
+#[as_exec]
 import bpy
 
 
@@ -6,7 +7,7 @@ def gen_tex():
     import re
     regex = re.compile('Texture2D\'(.+)\'')
     re_tex_type = re.compile('Name=(.+)\s')
-    base_path = 'H:\\models\\char4\\Azur Lane\\'
+    base_path = 'H:\\models\\char4\\3yue\\Azur Lane\\'
 
     def search(arr, str):
         for s in arr:

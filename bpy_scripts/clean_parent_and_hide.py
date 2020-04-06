@@ -1,3 +1,4 @@
+#[as_exec]
 import bpy
 
 

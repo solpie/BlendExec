@@ -1,3 +1,4 @@
+#[as_exec]
 import bpy
 bpy.ops.object.duplicate()
 bpy.ops.object.modifier_add(type='SOLIDIFY')

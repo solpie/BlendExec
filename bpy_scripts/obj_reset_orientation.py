@@ -1,4 +1,5 @@
 #[as_exec]
+# 1.place cursor on face with orientation mode :"Geometry"
 import bpy
 def main():
     mesh_obj_arr = []
