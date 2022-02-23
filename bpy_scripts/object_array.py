@@ -1,4 +1,5 @@
 #[as_exec]
+# keywords 弹框 dialog
 import bpy
 
 
@@ -57,7 +58,7 @@ def main():
         bl_idname = "wm.array"
         bl_options = {'REGISTER', 'UNDO'}
 
-        xyz = bpy.props.FloatVectorProperty(name="XYZ:", default=(0, 0, 0))
+        xyz : bpy.props.FloatVectorProperty(name="XYZ:", default=(0, 0, 0))
 
         def execute(self, context):
             xyz = self.xyz

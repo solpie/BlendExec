@@ -1,4 +1,4 @@
-#[as_exec]
+# [as_exec]
 import bpy
 def main():
     bpy.ops.object.select_pattern(pattern="cs_*")
