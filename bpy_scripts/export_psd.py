@@ -1,5 +1,5 @@
 #[as_exec]
-
+import bpy
 def main():
     def export_tex():
         #合并tex到源分层文件

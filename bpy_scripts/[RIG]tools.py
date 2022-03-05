@@ -5,6 +5,8 @@ from bpy.types import Operator
 
 
 def main():
+    # bpy path
+    bpy_path = 'F:\\projects\\BlendExec\\bpy_scripts\\'
     # register
     _register_classes = []
 
@@ -16,6 +18,14 @@ def main():
     def register_all():
         for item in _register_classes:
             bpy.utils.register_class(item)
+        add_keymap()
+
+    def add_keymap():
+        wm = bpy.context.window_manager
+        km = wm.keyconfigs.addon.keymaps.new(name='Object Mode')
+        kmi = km.keymap_items.new('floating.rig', 'V', 'PRESS', alt=False)
+        kmi.active = True
+        pass
 
     # FLOATING PANEL
     @register_class
@@ -25,15 +35,39 @@ def main():
 
         def draw(self, context):
             layout = self.layout
-            box = layout.column(align=True)
-            box.label(text="CAMERAS LISTER", icon="OUTLINER_OB_CAMERA")
+            split = layout.split(factor=0.5)
+            box = split.column()
+            box2 = split.column()
+            box.label(text="[RIG] tools", icon="OUTLINER_OB_CAMERA")
             box.separator()
             # ui button
+            box.operator("floating.make_override_library",
+                         text="make_override_library")
+
+            box.operator("floating.action_stash",
+                         text="action_stash")
+
             box.operator("floating.pick_rig_mesh",
                          text="pick_rig_mesh", icon="TRIA_RIGHT")
+
             box.operator("floating.obj_delete_cs_shape",
                          text="[OBJ] delete cs shape")
-            box.operator("floating.obj_uncheck_auto_normal", text="unckeck_auto_normal")
+
+            box.operator("floating.obj_set_rig",
+                         text="[OBJ] obj_set_rig")
+
+            box.operator("floating.obj_uncheck_auto_normal",
+                         text="unckeck_auto_normal")
+
+            box2.label(text="[MD]")
+            box2.operator("floating.export_abc")
+            op = box2.operator('bpylist.run', text="merge_new.py",
+                               icon='RADIOBUT_ON')
+            op.filename = bpy_path+'merge_new.py'
+            
+            box2.operator("floating.export_obj",
+                         text="export_obj")
+
         def invoke(self, context, event):
             wm = context.window_manager
             return wm.invoke_popup(self)
@@ -115,6 +149,87 @@ def main():
                 obj.data.use_auto_smooth = False
             return{'FINISHED'}
 
+    # 设置已rig的选中mesh的rig
+    @register_class
+    class ObjSetRig(Operator):
+        bl_idname = 'floating.obj_set_rig'
+        bl_label = 'obj_set_rig'
+        bl_description = "obj_set_rig"
+
+        bl_options = {'UNDO'}
+
+        def execute(self, context):
+            rig_obj = bpy.context.active_object
+            for obj in bpy.context.selected_objects:
+                if obj.type == "MESH":
+                    for modify in obj.modifiers:
+                        if modify.type == "ARMATURE":
+                            modify.object = rig_obj
+                            pass
+            return{'FINISHED'}
+            # bpy.ops.object.make_override_library()
+
+    # 设置已rig的选中mesh的rig
+    @register_class
+    class ObjMakeOverrideLibrary(Operator):
+        bl_idname = 'floating.make_override_library'
+        bl_label = 'make_override_library'
+        bl_description = "make_override_library"
+
+        bl_options = {'UNDO'}
+
+        def execute(self, context):
+            bpy.ops.object.make_override_library()
+            return{'FINISHED'}
+
+    # bpy.ops.action.stash
+    @register_class
+    class RigActionStash(Operator):
+        bl_idname = 'floating.action_stash'
+        bl_label = 'action_stash'
+        bl_description = "action_stash"
+
+        bl_options = {'UNDO'}
+
+        def execute(self, context):
+            bpy.ops.action.stash()
+            return{'FINISHED'}
+
+    # 导出abc
+    @register_class
+    class ObjExportAbc(Operator):
+        bl_idname = 'floating.export_abc'
+        bl_label = 'export_abc'
+        bl_description = "export_abc"
+
+        bl_options = {'UNDO'}
+
+        def execute(self, context):
+            base_path = 'F:/tmp/'
+            bpy.ops.object.select_all(action='DESELECT')
+            collection_abc = bpy.context.collection
+            for obj in collection_abc.all_objects:
+                obj.select_set(True)
+            bpy.ops.export_scene.fbx(
+                filepath=base_path+"pose.abc", use_selection=True)
+            return{'FINISHED'}
+    # 导出obj
+    @register_class
+    class ObjExportObj(Operator):
+        bl_idname = 'floating.export_obj'
+        bl_label = 'export_obj'
+        bl_description = "export_obj"
+
+        bl_options = {'UNDO'}
+
+        def execute(self, context):
+            base_path = 'F:/tmp/'
+            collection_obj = bpy.context.collection
+            for obj in collection_obj.all_objects:
+                obj.select_set(True)
+            bpy.ops.export_scene.obj(
+                filepath=base_path+collection_obj.name+'.obj', use_selection=True)
+            return{'FINISHED'}
     # start 弹框
     start()
     pass

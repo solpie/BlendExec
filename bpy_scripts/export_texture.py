@@ -4,8 +4,17 @@ def main():
     def export_tex():
         #合并tex到源分层文件
         pass
+    def create_layersets():
+        # psd group模板
+        # /source
+        # /textures
+        #   |tex.xxx_D
+        #   |tex.xxx_
+        pass
     def load_ps2(img_arr):
+        import os
         # 加载选中node链接的图片到psd里面的source layerset
+        # 
         import win32com.client
         # opens ps
         psApp = win32com.client.Dispatch("Photoshop.Application")
@@ -27,7 +36,11 @@ def main():
             activeDocument.exportDocument(new File(saveFile),ExportType.SAVEFORWEB,pngOpts); 
         }
         """
-        # todo folder path:
+        # folder path:
+        textures_path = os.path.dirname(img_arr[0][1])
+        textures_path = textures_path.replace("\\", "/")+'/'
+        # print("textures_path",textures_path)
+        js += r"""var tex_folder = '"""+textures_path+r"""';"""
         js += r"""
         // if (layer.typename == 'LayerSet'){}
         var layerSets = doc.layerSets['textures'].layerSets
@@ -48,7 +61,7 @@ def main():
         {
             var layerSet = tex_layerSet_arr[j];
             layerSet.visible = true;
-            var saveFile = new File("C:/tmp/"+layerSet.name+".png");
+            var saveFile = new File("tex_folder"+layerSet.name+".png");
             SavePNG(saveFile);
             layerSet.visible = false;
         }
@@ -57,6 +70,7 @@ def main():
         js += r"""
 
         //doc.close();
+        app.activeDocument.close(SaveOptions.DONOTSAVECHANGES);
         """
         # doc.save()
         # doc.Close()

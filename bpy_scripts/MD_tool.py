@@ -1,4 +1,4 @@
-# [as_module]
+#[as_module]
 import bpy
 
 

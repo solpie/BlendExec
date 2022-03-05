@@ -1,4 +1,4 @@
-#[as_exec]
+# [as_exec]
 import bpy
 def main():
     mesh_obj_arr = []
