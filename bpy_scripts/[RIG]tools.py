@@ -7,6 +7,27 @@ from bpy.types import Operator
 def main():
     # bpy path
     bpy_path = 'F:\\projects\\BlendExec\\bpy_scripts\\'
+    def run_bpy(filename):
+        bpypath = bpy_path+filename
+        with open(bpypath, 'r+') as f:
+            bpy_text = f.read()
+            print('BlenCall')
+            if '#[as_module]' in bpy_text:
+                print('as_module')
+                if len(bpy_text):
+                    if 'exec' not in bpy.data.texts:
+                        bpy.data.texts.new('exec')
+                    bpy.data.texts['exec'].from_string(bpy_text)
+                    bpy.data.texts['exec'].as_module()
+                    bpy.data.texts['exec'].from_string('')
+                else:
+                    print('no bpy')
+            else:
+                print('exec compile')
+                exec(compile(bpy_text, '<string>', 'exec'))
+                pass
+            f.close()
+        pass
     # register
     _register_classes = []
 
@@ -59,14 +80,36 @@ def main():
             box.operator("floating.obj_uncheck_auto_normal",
                          text="unckeck_auto_normal")
 
+            box.operator('bpylist.run',
+            text="Re224_doll_rig", 
+            icon='RADIOBUT_ON'
+            ).filename = bpy_path+'rig_tools\\Re224_doll_rig.py'
+
+            box.operator('bpylist.run',
+            text="Re224_doll_delete", 
+            icon='RADIOBUT_ON'
+            ).filename = bpy_path+'rig_tools\\Re224_doll_delete.py'
+# Re224_doll_rig.py
             box2.label(text="[MD]")
-            box2.operator("floating.export_abc")
+            # box2.operator("floating.export_abc")
+            op = box2.operator('bpylist.run', text="export_pose_abc.py",
+                               icon='RADIOBUT_ON')
+            op.filename = bpy_path+'rig_tools\\export_pose_abc.py'
+
             op = box2.operator('bpylist.run', text="merge_new.py",
                                icon='RADIOBUT_ON')
+
             op.filename = bpy_path+'merge_new.py'
-            
-            box2.operator("floating.export_obj",
-                         text="export_obj")
+
+            box2.operator('bpylist.run',
+            text="export_collection_obj", 
+            icon='RADIOBUT_ON'
+            ).filename = bpy_path+'rig_tools\\io_export_collection_obj.py'
+
+            box2.operator('bpylist.run',
+            text="import_cloth_out", 
+            icon='RADIOBUT_ON'
+            ).filename = bpy_path+'rig_tools\\io_import_cloth_out.py'
 
         def invoke(self, context, event):
             wm = context.window_manager
@@ -195,41 +238,6 @@ def main():
             bpy.ops.action.stash()
             return{'FINISHED'}
 
-    # 导出abc
-    @register_class
-    class ObjExportAbc(Operator):
-        bl_idname = 'floating.export_abc'
-        bl_label = 'export_abc'
-        bl_description = "export_abc"
-
-        bl_options = {'UNDO'}
-
-        def execute(self, context):
-            base_path = 'F:/tmp/'
-            bpy.ops.object.select_all(action='DESELECT')
-            collection_abc = bpy.context.collection
-            for obj in collection_abc.all_objects:
-                obj.select_set(True)
-            bpy.ops.export_scene.fbx(
-                filepath=base_path+"pose.abc", use_selection=True)
-            return{'FINISHED'}
-    # 导出obj
-    @register_class
-    class ObjExportObj(Operator):
-        bl_idname = 'floating.export_obj'
-        bl_label = 'export_obj'
-        bl_description = "export_obj"
-
-        bl_options = {'UNDO'}
-
-        def execute(self, context):
-            base_path = 'F:/tmp/'
-            collection_obj = bpy.context.collection
-            for obj in collection_obj.all_objects:
-                obj.select_set(True)
-            bpy.ops.export_scene.obj(
-                filepath=base_path+collection_obj.name+'.obj', use_selection=True)
-            return{'FINISHED'}
     # start 弹框
     start()
     pass

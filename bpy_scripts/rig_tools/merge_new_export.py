@@ -10,6 +10,14 @@ def merge_new():
         global info
         self.layout.label(text=info)
 
+    def export_obj():
+        base_path = 'F:/tmp/'
+        collection_obj = bpy.context.collection
+        # for obj in collection_obj.all_objects:
+        #     obj.select_set(True)
+        bpy.ops.export_scene.obj(
+            filepath=base_path+collection_obj.name+'.obj', use_selection=True)
+        pass
     def check_uvmap():
         # 检查uvmap是否唯一且名字为默认UVMap
         global info
